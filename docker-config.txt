@@ -1,0 +1,60 @@
+# Dockerfile.backend
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/app ./app
+COPY backend/tests ./tests
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+---
+# Dockerfile.frontend
+FROM node:16-alpine
+
+WORKDIR /app
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm install
+
+COPY frontend/ .
+RUN npm run build
+
+CMD ["npm", "run", "preview"]
+
+---
+# docker-compose.yml
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - DATABASE_NAME=rule_engine
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:

@@ -1,0 +1,54 @@
+.PHONY: setup test run clean docker-build docker-run
+
+# Development setup
+setup: setup-backend setup-frontend
+
+setup-backend:
+	cd backend && \
+	python -m venv venv && \
+	. venv/bin/activate && \
+	pip install -r requirements.txt
+
+setup-frontend:
+	cd frontend && npm install
+
+# Testing
+test: test-backend test-frontend
+
+test-backend:
+	cd backend && \
+	. venv/bin/activate && \
+	pytest
+
+test-frontend:
+	cd frontend && npm test
+
+# Running services
+run: run-backend run-frontend
+
+run-backend:
+	cd backend && \
+	. venv/bin/activate && \
+	uvicorn app.main:app --reload
+
+run-frontend:
+	cd frontend && npm run dev
+
+# Docker commands
+docker-build:
+	docker-compose build
+
+docker-run:
+	docker-compose up
+
+docker-stop:
+	docker-compose down
+
+# Cleaning
+clean:
+	find . -type d -name "__pycache__" -exec rm -r {} +
+	find . -type d -name "*.pyc" -exec rm -r {} +
+	find . -type d -name ".pytest_cache" -exec rm -r {} +
+	find . -type d -name "node_modules" -exec rm -r {} +
+	find . -type d -name "dist" -exec rm -r {} +
+	find . -type d -name "build" -exec rm -r {} +

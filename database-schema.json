@@ -1,0 +1,56 @@
+{
+  "rules": {
+    "rule_id": "string",
+    "name": "string",
+    "description": "string",
+    "created_at": "datetime",
+    "updated_at": "datetime",
+    "ast": {
+      "type": "string",
+      "operator": "string",
+      "value": "mixed",
+      "field": "string",
+      "left": "object (recursive)",
+      "right": "object (recursive)"
+    },
+    "metadata": {
+      "version": "number",
+      "created_by": "string",
+      "is_active": "boolean",
+      "tags": ["string"]
+    }
+  },
+  
+  "rule_sets": {
+    "set_id": "string",
+    "name": "string",
+    "description": "string",
+    "rules": ["rule_id references"],
+    "combine_operator": "string",
+    "created_at": "datetime",
+    "updated_at": "datetime",
+    "metadata": {
+      "version": "number",
+      "created_by": "string",
+      "is_active": "boolean",
+      "tags": ["string"]
+    }
+  },
+  
+  "attribute_catalog": {
+    "attribute_name": "string",
+    "data_type": "string",
+    "description": "string",
+    "validation_rules": {
+      "min": "number",
+      "max": "number",
+      "allowed_values": ["mixed"],
+      "regex_pattern": "string"
+    },
+    "metadata": {
+      "created_at": "datetime",
+      "updated_at": "datetime",
+      "is_active": "boolean"
+    }
+  }
+}
